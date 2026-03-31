@@ -1,7 +1,7 @@
 {
   "norte": {
     "heading": "Digital Twin of Human Movement",
-    "sub": "Infraestrutura da inteligência do movimento humano — plataforma, não produto. Construindo o Body Operating System."
+    "sub": "Infraestrutura da inteligÃªncia do movimento humano â plataforma, nÃ£o produto. Construindo o Body Operating System."
   },
   "milestones": [
     {
@@ -9,19 +9,19 @@
       "title": "Website completo",
       "desc": "Hero + Platform + Applications + D2W. Narrativa deep-tech coesa.",
       "status": "active",
-      "progress": 100
+      "progress": 75
     },
     {
       "id": 2,
       "title": "Pitch deck investor-ready",
-      "desc": "12 slides. Problema → mercado → plataforma → D2W → tração → pedido.",
+      "desc": "12 slides. Problema â mercado â plataforma â D2W â traÃ§Ã£o â pedido.",
       "status": "active",
       "progress": 30
     },
     {
       "id": 3,
       "title": "Primeiro venture client",
-      "desc": "Clínica, lab ou ginásio validando D2W em contexto real.",
+      "desc": "ClÃ­nica, lab ou ginÃ¡sio validando D2W em contexto real.",
       "status": "next",
       "progress": 0
     },
@@ -34,8 +34,8 @@
     },
     {
       "id": 5,
-      "title": "D2W em validação clínica formal",
-      "desc": "Protocolo com FMH/parceiro científico. Dados para paper.",
+      "title": "D2W em validaÃ§Ã£o clÃ­nica formal",
+      "desc": "Protocolo com FMH/parceiro cientÃ­fico. Dados para paper.",
       "status": "next",
       "progress": 0
     }
@@ -45,7 +45,7 @@
       "id": 1,
       "title": "Website",
       "status": "hot",
-      "badge": "🔥 Urgente",
+      "badge": "ð¥ Urgente",
       "items": [
         "Hero",
         "Platform",
@@ -57,7 +57,7 @@
       "id": 2,
       "title": "Pitch deck",
       "status": "hot",
-      "badge": "🔥 Urgente",
+      "badge": "ð¥ Urgente",
       "items": [
         "Estrutura",
         "narrativa",
@@ -83,7 +83,7 @@
       "status": "waiting",
       "badge": "A seguir",
       "items": [
-        "Ficha técnica",
+        "Ficha tÃ©cnica",
         "targets",
         "outreach"
       ]
@@ -95,8 +95,8 @@
       "badge": "Em curso",
       "items": [
         "TRL 4/5",
-        "protótipo",
-        "validação"
+        "protÃ³tipo",
+        "validaÃ§Ã£o"
       ]
     },
     {
