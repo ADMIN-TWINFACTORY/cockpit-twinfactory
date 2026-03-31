@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TF Cockpit</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:         #07111F;
+  --surface:    #0d1e30;
+  --surface2:   #142840;
+  --border:     #1e3a52;
+  --border2:    #2a5070;
+  --text:       #FFFFFF;
+  --text2:      #C8D8E8;
+  --muted:      #7a9ab8;
+  --blue:       #85C6EB;
+  --blue-dim:   rgba(133,198,235,0.12);
+  --blue-mid:   rgba(133,198,235,0.25);
+  --orange:     #FF671D;
+  --orange-dim: rgba(255,103,29,0.13);
+  --orange-mid: rgba(255,103,29,0.28);
+  --teal:       #2dd4bf;
+  --teal-dim:   rgba(45,212,191,0.12);
+  --red:        #ff5a5a;
+  --red-dim:    rgba(255,90,90,0.12);
+  --font:       'Plus Jakarta Sans', sans-serif;
+  --font2:      'Nunito Sans', sans-serif;
+  --r:          8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+
+/* HEADER */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 2.5rem; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0;
+  background: rgba(7,17,31,0.97);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+.tf-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.tf-symbol { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 26px; height: 26px; }
+.tf-symbol span { background: var(--orange); border-radius: 2px; display: block; }
+.tf-symbol span:last-child { opacity: .32; }
+.tf-wordmark { font-size: 15px; font-weight: 800; letter-spacing: -.01em; color: var(--text); }
+.tf-wordmark em { font-style: normal; color: var(--orange); }
+.tf-tag { font-family: var(--font2); font-size: 10px; color: var(--muted); border-left: 1px solid var(--border2); padding-left: 10px; margin-left: 4px; letter-spacing: .04em; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.date-pill { font-family: var(--font2); font-size: 12px; color: var(--text2); background: var(--surface); border: 1px solid var(--border); padding: .35rem .8rem; border-radius: 99px; }
+.sync-status { font-family: var(--font2); font-size: 11px; display: flex; align-items: center; gap: 5px; }
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+.sync-dot.syncing { background: var(--orange); animation: blink 1s ease-in-out infinite; }
+.sync-dot.error { background: var(--red); }
+.sync-dot.local { background: var(--muted); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.sync-label { color: var(--muted); }
+.btn-settings { background: transparent; border: 1px solid var(--border); border-radius: var(--r); color: var(--muted); font-family: var(--font2); font-size: 11px; padding: .3rem .7rem; cursor: pointer; transition: all .15s; }
+.btn-settings:hover { border-color: var(--border2); color: var(--text2); }
+
+/* MAIN */
+.main { max-width: 1140px; margin: 0 auto; padding: 2.5rem 2.5rem 6rem; }
+
+/* NORTE */
+.norte {
+  margin-bottom: 2.5rem; padding: 2rem 2.5rem;
+  border: 1px solid var(--border); border-left: 4px solid var(--orange);
+  border-radius: var(--r); background: var(--surface);
+  cursor: pointer; transition: background .2s;
+  position: relative; overflow: hidden;
+}
+.norte::after { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 90% 50%, rgba(255,103,29,0.06), transparent 60%); pointer-events:none; }
+.norte:hover { background: var(--surface2); }
+.norte-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--orange); text-transform: uppercase; margin-bottom: .6rem; }
+.norte-heading { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -.03em; margin-bottom: .5rem; line-height: 1.15; }
+.norte-sub { font-family: var(--font2); font-size: 15px; color: var(--text2); line-height: 1.65; max-width: 600px; }
+.norte-hint { position: absolute; top: 1.25rem; right: 1.5rem; font-size: 11px; color: var(--muted); opacity: 0; transition: opacity .2s; pointer-events: none; }
+.norte:hover .norte-hint { opacity: 1; }
+
+/* GRID */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+
+/* SECTION */
+.section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1rem; }
+.section-title { font-size: 11px; font-weight: 700; letter-spacing: .13em; color: var(--blue); text-transform: uppercase; }
+.section-meta { font-family: var(--font2); font-size: 12px; color: var(--muted); }
+
+/* MILESTONES */
+.ms-list { display: flex; flex-direction: column; gap: .6rem; }
+.ms {
+  padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: var(--r);
+  background: var(--surface); cursor: pointer; transition: all .18s;
+  display: flex; gap: .85rem; align-items: flex-start;
+}
+.ms:hover { border-color: var(--border2); background: var(--surface2); transform: translateY(-1px); }
+.ms.active  { border-color: var(--blue-mid);              background: var(--blue-dim); }
+.ms.done    { border-color: rgba(45,212,191,0.35);        background: var(--teal-dim); }
+.ms.blocked { border-color: rgba(255,90,90,0.35);         background: var(--red-dim); }
+.ms-aside { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 22px; padding-top: 3px; }
+.ms-n { font-family: var(--font2); font-size: 11px; font-weight: 700; color: var(--muted); }
+.ms-dot { width: 9px; height: 9px; border-radius: 50%; }
+.ms.active  .ms-dot { background: var(--blue); box-shadow: 0 0 6px rgba(133,198,235,0.5); }
+.ms.done    .ms-dot { background: var(--teal); }
+.ms.next    .ms-dot { background: transparent; border: 1.5px solid var(--muted); }
+.ms.blocked .ms-dot { background: var(--red); }
+.ms-body { flex: 1; min-width: 0; }
+.ms-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: .3rem; }
+.ms-desc { font-family: var(--font2); font-size: 13px; color: var(--text2); line-height: 1.55; }
+.ms-footer { display: flex; align-items: center; justify-content: space-between; margin-top: .6rem; }
+.ms-state { font-size: 12px; font-weight: 600; }
+.ms.active  .ms-state { color: var(--blue); }
+.ms.done    .ms-state { color: var(--teal); }
+.ms.next    .ms-state { color: var(--muted); }
+.ms.blocked .ms-state { color: var(--red); }
+.ms-bar { height: 4px; width: 72px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.ms-fill { height: 100%; border-radius: 2px; background: var(--blue); transition: width .4s ease; }
+.ms.done .ms-fill { background: var(--teal); }
+
+/* FRENTES */
+.fr-list { display: flex; flex-direction: column; gap: .6rem; }
+.fr {
+  padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: var(--r);
+  background: var(--surface); cursor: pointer; transition: all .18s;
+}
+.fr:hover { border-color: var(--border2); background: var(--surface2); transform: translateY(-1px); }
+.fr.hot    { border-color: var(--orange-mid); background: var(--orange-dim); }
+.fr.active { border-color: var(--blue-mid);   background: var(--blue-dim); }
+.fr-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .4rem; }
+.fr-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.fr-badge { font-size: 10px; font-weight: 700; padding: .25rem .6rem; border-radius: 99px; letter-spacing: .05em; text-transform: uppercase; }
+.fr.hot     .fr-badge { background: var(--orange-mid); color: var(--orange); }
+.fr.active  .fr-badge { background: var(--blue-mid);   color: var(--blue); }
+.fr.waiting .fr-badge { background: var(--surface2); color: var(--muted); border: 1px solid var(--border2); }
+.fr-items { font-family: var(--font2); font-size: 13px; color: var(--text2); line-height: 1.7; }
+.fr-items span { display: inline-block; margin-right: 1rem; }
+.fr-items span::before { content: '· '; color: var(--muted); }
+
+/* FOCUS ZONE */
+.focus-zone { padding: 1.5rem 1.75rem; border: 1px solid var(--border); border-radius: var(--r); background: var(--surface); }
+.focus-title { font-size: 11px; font-weight: 700; letter-spacing: .13em; color: var(--orange); text-transform: uppercase; margin-bottom: 1.1rem; }
+.focus-btns { display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem; }
+.focus-btn {
+  padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: var(--r);
+  background: transparent; color: var(--text); font-family: var(--font);
+  cursor: pointer; text-align: left; transition: all .18s;
+  display: flex; flex-direction: column; gap: .3rem;
+}
+.focus-btn:hover { border-color: var(--orange); background: var(--orange-dim); transform: translateY(-1px); }
+.focus-btn strong { font-size: 15px; font-weight: 800; color: var(--orange); display: block; }
+.focus-btn span { font-family: var(--font2); font-size: 12px; color: var(--text2); }
+
+.hint { font-family: var(--font2); font-size: 12px; color: var(--muted); text-align: center; margin-top: 3rem; }
+
+/* OVERLAY GERAL */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(7,17,31,0.92); backdrop-filter: blur(4px);
+  z-index: 200; align-items: center; justify-content: center; padding: 1rem;
+}
+.overlay.open { display: flex; }
+.panel {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-top: 3px solid var(--orange); border-radius: var(--r);
+  padding: 2rem; width: 100%; max-width: 500px;
+}
+.panel-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 1.5rem; }
+.field { margin-bottom: 1.1rem; }
+.label { display: block; font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--blue); text-transform: uppercase; margin-bottom: .45rem; }
+.inp, .sel, .ta {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2);
+  border-radius: var(--r); color: var(--text); font-family: var(--font2);
+  font-size: 14px; padding: .65rem .85rem; outline: none; transition: border-color .15s;
+}
+.ta { min-height: 90px; resize: vertical; line-height: 1.55; }
+.inp:focus, .sel:focus, .ta:focus { border-color: var(--blue); }
+.sel option { background: #0d1e30; }
+.rng { width: 100%; accent-color: var(--orange); margin-top: 4px; }
+.rng-val { font-size: 12px; color: var(--orange); margin-left: 8px; font-weight: 700; }
+.panel-footer { display: flex; gap: .6rem; justify-content: flex-end; margin-top: 1.5rem; }
+.btn-ok { background: var(--orange); color: #fff; border: none; border-radius: var(--r); font-family: var(--font); font-size: 14px; font-weight: 700; padding: .6rem 1.5rem; cursor: pointer; transition: opacity .15s; }
+.btn-ok:hover { opacity: .85; }
+.btn-no { background: transparent; color: var(--muted); border: 1px solid var(--border2); border-radius: var(--r); font-family: var(--font2); font-size: 14px; padding: .6rem 1.1rem; cursor: pointer; transition: color .15s; }
+.btn-no:hover { color: var(--text); }
+
+/* SETUP OVERLAY */
+.setup-panel {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-top: 3px solid var(--blue); border-radius: var(--r);
+  padding: 2.5rem; width: 100%; max-width: 520px;
+}
+.setup-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: .5rem; }
+.setup-sub { font-family: var(--font2); font-size: 14px; color: var(--text2); line-height: 1.6; margin-bottom: 2rem; }
+.setup-sub a { color: var(--blue); }
+.setup-steps { font-family: var(--font2); font-size: 13px; color: var(--text2); line-height: 1.8; margin-bottom: 1.5rem; background: var(--surface2); border-radius: var(--r); padding: 1rem 1.25rem; border: 1px solid var(--border); }
+.setup-steps li { margin-left: 1rem; }
+.setup-warn { font-family: var(--font2); font-size: 12px; color: var(--orange); margin-top: 1rem; }
+.inp-token { font-family: monospace; font-size: 13px; letter-spacing: .02em; }
+
+@media (max-width: 760px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .main { padding: 1.5rem 1rem 4rem; }
+  .header { padding: 0 1rem; }
+  .focus-btns { grid-template-columns: 1fr; }
+  .norte-heading { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="tf-logo" href="#">
+    <div class="tf-symbol"><span></span><span></span><span></span><span></span></div>
+    <div><div class="tf-wordmark">twin <em>factory</em></div></div>
+    <div class="tf-tag">cockpit</div>
+  </a>
+  <div class="header-right">
+    <div class="date-pill" id="today-date"></div>
+    <div class="sync-status">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span class="sync-label" id="sync-label">a carregar...</span>
+    </div>
+    <button class="btn-settings" onclick="openSettings()">⚙ config</button>
+  </div>
+</header>
+
+<main class="main">
+  <div class="norte" onclick="editNorte()">
+    <div class="norte-eyebrow">Norte verdadeiro</div>
+    <div class="norte-heading" id="norte-heading">—</div>
+    <div class="norte-sub" id="norte-sub">—</div>
+    <div class="norte-hint">clica para editar</div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="section-header">
+        <span class="section-title">Milestones</span>
+        <span class="section-meta" id="ms-count"></span>
+      </div>
+      <div class="ms-list" id="ms-list"></div>
+    </div>
+    <div>
+      <div class="section-header">
+        <span class="section-title">Frentes ativas</span>
+        <span class="section-meta" id="fr-count"></span>
+      </div>
+      <div class="fr-list" id="fr-list"></div>
+    </div>
+  </div>
+
+  <div class="focus-zone">
+    <div class="focus-title">Começar agora</div>
+    <div class="focus-btns">
+      <button class="focus-btn" onclick="window.open('https://github.com/ADMIN-TWINFACTORY/MASTER','_blank')">
+        <strong>Website →</strong><span>Hero · Platform · D2W · deploy</span>
+      </button>
+      <button class="focus-btn" onclick="window.open('https://drive.google.com','_blank')">
+        <strong>Pitch →</strong><span>Estrutura · narrativa · slides</span>
+      </button>
+      <button class="focus-btn" onclick="editNorte()">
+        <strong>Actualizar →</strong><span>Norte · milestones · frentes</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="hint">clica em qualquer card para editar · guardado automaticamente no GitHub</div>
+</main>
+
+<!-- EDIT OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="panel">
+    <div class="panel-title" id="panel-title">Editar</div>
+    <div id="panel-fields"></div>
+    <div class="panel-footer">
+      <button class="btn-no" onclick="closeEdit()">Cancelar</button>
+      <button class="btn-ok" onclick="saveEdit()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP OVERLAY -->
+<div class="overlay" id="setup-overlay">
+  <div class="setup-panel">
+    <div class="setup-title">Configurar sincronização</div>
+    <div class="setup-sub">O cockpit guarda os dados num ficheiro <code>data.json</code> no teu repositório GitHub — acessível em qualquer dispositivo.</div>
+    <ol class="setup-steps">
+      <li>Vai a <strong>github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong></li>
+      <li>Clica <strong>Generate new token (classic)</strong></li>
+      <li>Nome: <code>tf-cockpit</code> · Expiration: <strong>No expiration</strong></li>
+      <li>Scopes: marca apenas <strong>repo</strong></li>
+      <li>Gera e cola abaixo — fica guardado só neste browser</li>
+    </ol>
+    <div class="field">
+      <label class="label">GitHub Personal Access Token</label>
+      <input class="inp inp-token" id="setup-token" type="password" placeholder="ghp_...">
+    </div>
+    <div class="setup-warn">⚠ O token nunca sai do teu browser — é enviado diretamente para a GitHub API.</div>
+    <div class="panel-footer">
+      <button class="btn-no" onclick="closeSetup()">Usar offline</button>
+      <button class="btn-ok" onclick="saveSetup()">Ligar ao GitHub</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const REPO  = 'ADMIN-TWINFACTORY/cockpit-twinfactory';
+const FILE  = 'data.json';
+const API   = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
+
+const DEF = {
+  norte: {
+    heading: 'Digital Twin of Human Movement',
+    sub: 'Infraestrutura da inteligência do movimento humano — plataforma, não produto. Construindo o Body Operating System.'
+  },
+  milestones: [
+    { id:1, title:'Website completo',            desc:'Hero + Platform + Applications + D2W. Narrativa deep-tech coesa.',     status:'active',  progress:60 },
+    { id:2, title:'Pitch deck investor-ready',   desc:'12 slides. Problema → mercado → plataforma → D2W → tração → pedido.', status:'active',  progress:30 },
+    { id:3, title:'Primeiro venture client',     desc:'Clínica, lab ou ginásio validando D2W em contexto real.',             status:'next',    progress:0  },
+    { id:4, title:'Primeiro cheque de investimento', desc:'Angel, pre-seed ou grant (FCT, Compete, EIC).',                   status:'next',    progress:0  },
+    { id:5, title:'D2W em validação clínica formal', desc:'Protocolo com FMH/parceiro científico. Dados para paper.',        status:'next',    progress:0  }
+  ],
+  frentes: [
+    { id:1, title:'Website',        status:'hot',     badge:'🔥 Urgente', items:['Hero','Platform','D2W subpage','mobile'] },
+    { id:2, title:'Pitch deck',     status:'hot',     badge:'🔥 Urgente', items:['Estrutura','narrativa','slides chave','one-pager'] },
+    { id:3, title:'Parcerias',      status:'active',  badge:'Em curso',   items:['Taguspark','FMH','Oeiras Valley','Prof. Veloso'] },
+    { id:4, title:'Venture clients',status:'waiting', badge:'A seguir',   items:['Ficha técnica','targets','outreach'] },
+    { id:5, title:'Produto D2W',    status:'active',  badge:'Em curso',   items:['TRL 4/5','protótipo','validação'] },
+    { id:6, title:'Fundraising',    status:'waiting', badge:'A seguir',   items:['FCT','Compete 2030','angels PT/BR'] }
+  ]
+};
+
+const stateLabel = { active:'● Em progresso', done:'✓ Concluído', next:'○ Próximo', blocked:'✕ Bloqueado' };
+
+let D   = DEF;
+let tgt = null;
+let sha = null; // GitHub file SHA (needed to update)
+
+/* ── TOKEN ── */
+function getToken() { return localStorage.getItem('tf-gh-token'); }
+function setToken(t) { localStorage.setItem('tf-gh-token', t); }
+
+/* ── SYNC STATUS ── */
+function syncStatus(state, label) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot' + (state ? ' ' + state : '');
+  lbl.textContent = label;
+}
+
+/* ── LOAD FROM GITHUB ── */
+async function loadFromGitHub() {
+  const token = getToken();
+  if (!token) { loadLocal(); return; }
+
+  syncStatus('syncing', 'a sincronizar...');
+  try {
+    const res = await fetch(API, {
+      headers: { Authorization: 'token ' + token, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (res.status === 404) {
+      // File doesn't exist yet — push defaults
+      await pushToGitHub(DEF, null);
+      D = DEF;
+    } else if (res.ok) {
+      const json = await res.json();
+      sha = json.sha;
+      D = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    } else if (res.status === 401) {
+      syncStatus('error', 'token inválido');
+      loadLocal(); return;
+    }
+    syncStatus('', 'sincronizado');
+    render();
+  } catch(e) {
+    syncStatus('error', 'sem ligação');
+    loadLocal();
+  }
+}
+
+function loadLocal() {
+  try { D = JSON.parse(localStorage.getItem('tf-cockpit')) || DEF; } catch(e) { D = DEF; }
+  syncStatus('local', 'offline (local)');
+  render();
+}
+
+/* ── PUSH TO GITHUB ── */
+async function pushToGitHub(data, currentSha) {
+  const token = getToken();
+  if (!token) return false;
+
+  syncStatus('syncing', 'a guardar...');
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  const body = { message: 'cockpit update', content };
+  if (currentSha) body.sha = currentSha;
+
+  try {
+    const res = await fetch(API, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'token ' + token,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      const json = await res.json();
+      sha = json.content.sha;
+      syncStatus('', 'guardado ✓');
+      return true;
+    } else {
+      syncStatus('error', 'erro ao guardar');
+      return false;
+    }
+  } catch(e) {
+    syncStatus('error', 'sem ligação');
+    return false;
+  }
+}
+
+/* ── SAVE ── */
+async function save() {
+  localStorage.setItem('tf-cockpit', JSON.stringify(D));
+  if (getToken()) await pushToGitHub(D, sha);
+}
+
+/* ── RENDER ── */
+function render() {
+  const now = new Date();
+  document.getElementById('today-date').textContent =
+    now.toLocaleDateString('pt-PT', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+
+  document.getElementById('norte-heading').textContent = D.norte.heading;
+  document.getElementById('norte-sub').textContent     = D.norte.sub;
+
+  const done = D.milestones.filter(m=>m.status==='done').length;
+  document.getElementById('ms-count').textContent = done + ' / ' + D.milestones.length + ' concluídos';
+  document.getElementById('ms-list').innerHTML = D.milestones.map(m=>`
+    <div class="ms ${m.status}" onclick="editMs(${m.id})">
+      <div class="ms-aside"><div class="ms-n">0${m.id}</div><div class="ms-dot"></div></div>
+      <div class="ms-body">
+        <div class="ms-title">${m.title}</div>
+        <div class="ms-desc">${m.desc}</div>
+        <div class="ms-footer">
+          <div class="ms-state">${stateLabel[m.status]||m.status}</div>
+          ${m.progress>0?`<div class="ms-bar"><div class="ms-fill" style="width:${m.progress}%"></div></div>`:''}
+        </div>
+      </div>
+    </div>`).join('');
+
+  const hot = D.frentes.filter(f=>f.status==='hot').length;
+  document.getElementById('fr-count').textContent = hot + ' urgentes';
+  document.getElementById('fr-list').innerHTML = D.frentes.map(f=>`
+    <div class="fr ${f.status}" onclick="editFr(${f.id})">
+      <div class="fr-top"><div class="fr-title">${f.title}</div><div class="fr-badge">${f.badge}</div></div>
+      <div class="fr-items">${f.items.map(i=>`<span>${i}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+/* ── SETUP ── */
+function openSettings() {
+  const t = getToken();
+  if (t) document.getElementById('setup-token').value = t;
+  document.getElementById('setup-overlay').classList.add('open');
+}
+function closeSetup() { document.getElementById('setup-overlay').classList.remove('open'); }
+function saveSetup() {
+  const t = document.getElementById('setup-token').value.trim();
+  if (!t) { alert('Cola o token primeiro.'); return; }
+  setToken(t);
+  closeSetup();
+  sha = null;
+  loadFromGitHub();
+}
+
+/* ── EDIT OVERLAY ── */
+function closeEdit() { document.getElementById('overlay').classList.remove('open'); tgt=null; }
+document.getElementById('overlay').addEventListener('click', function(e){ if(e.target===this) closeEdit(); });
+document.getElementById('setup-overlay').addEventListener('click', function(e){ if(e.target===this) closeSetup(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeEdit(); closeSetup(); } });
+
+function openPanel(title, html) {
+  document.getElementById('panel-title').textContent = title;
+  document.getElementById('panel-fields').innerHTML  = html;
+  document.getElementById('overlay').classList.add('open');
+}
+
+function editNorte() {
+  tgt = {type:'norte'};
+  openPanel('Norte verdadeiro', `
+    <div class="field"><label class="label">Título</label><input class="inp" id="ef-h" value="${D.norte.heading}"></div>
+    <div class="field"><label class="label">Descrição</label><textarea class="ta" id="ef-s">${D.norte.sub}</textarea></div>`);
+}
+
+function editMs(id) {
+  const m = D.milestones.find(x=>x.id===id);
+  tgt = {type:'ms', id};
+  openPanel('Milestone 0'+id, `
+    <div class="field"><label class="label">Título</label><input class="inp" id="ef-t" value="${m.title}"></div>
+    <div class="field"><label class="label">Descrição</label><textarea class="ta" id="ef-d">${m.desc}</textarea></div>
+    <div class="field"><label class="label">Estado</label>
+      <select class="sel" id="ef-s">
+        <option value="next"    ${m.status==='next'?'selected':''}>○ Próximo</option>
+        <option value="active"  ${m.status==='active'?'selected':''}>● Em progresso</option>
+        <option value="done"    ${m.status==='done'?'selected':''}>✓ Concluído</option>
+        <option value="blocked" ${m.status==='blocked'?'selected':''}>✕ Bloqueado</option>
+      </select></div>
+    <div class="field"><label class="label">Progresso <span class="rng-val" id="ef-pv">${m.progress}%</span></label>
+      <input type="range" class="rng" id="ef-p" min="0" max="100" step="5" value="${m.progress}"
+        oninput="document.getElementById('ef-pv').textContent=this.value+'%'"></div>`);
+}
+
+function editFr(id) {
+  const f = D.frentes.find(x=>x.id===id);
+  tgt = {type:'fr', id};
+  openPanel('Frente: '+f.title, `
+    <div class="field"><label class="label">Título</label><input class="inp" id="ef-t" value="${f.title}"></div>
+    <div class="field"><label class="label">Estado</label>
+      <select class="sel" id="ef-s">
+        <option value="hot"     ${f.status==='hot'?'selected':''}>🔥 Urgente</option>
+        <option value="active"  ${f.status==='active'?'selected':''}>● Em curso</option>
+        <option value="waiting" ${f.status==='waiting'?'selected':''}>○ A seguir</option>
+      </select></div>
+    <div class="field"><label class="label">Badge</label><input class="inp" id="ef-b" value="${f.badge}"></div>
+    <div class="field"><label class="label">Itens (separados por vírgula)</label>
+      <input class="inp" id="ef-i" value="${f.items.join(', ')}"></div>`);
+}
+
+async function saveEdit() {
+  if (!tgt) return;
+  if (tgt.type==='norte') {
+    D.norte.heading = document.getElementById('ef-h').value;
+    D.norte.sub     = document.getElementById('ef-s').value;
+  } else if (tgt.type==='ms') {
+    const m = D.milestones.find(x=>x.id===tgt.id);
+    m.title    = document.getElementById('ef-t').value;
+    m.desc     = document.getElementById('ef-d').value;
+    m.status   = document.getElementById('ef-s').value;
+    m.progress = parseInt(document.getElementById('ef-p').value);
+  } else if (tgt.type==='fr') {
+    const f = D.frentes.find(x=>x.id===tgt.id);
+    f.title  = document.getElementById('ef-t').value;
+    f.status = document.getElementById('ef-s').value;
+    f.badge  = document.getElementById('ef-b').value;
+    f.items  = document.getElementById('ef-i').value.split(',').map(s=>s.trim()).filter(Boolean);
+  }
+  closeEdit();
+  render();
+  await save();
+}
+
+/* ── INIT ── */
+document.getElementById('today-date').textContent =
+  new Date().toLocaleDateString('pt-PT', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+
+if (!getToken()) {
+  // First time — show setup
+  loadLocal();
+  openSettings();
+} else {
+  loadFromGitHub();
+}
+</script>
+</body>
+</html>
