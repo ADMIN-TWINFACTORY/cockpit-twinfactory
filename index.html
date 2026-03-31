@@ -131,7 +131,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .fr-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .4rem; }
 .fr-title { font-size: 15px; font-weight: 700; color: var(--text); }
 .fr-badge { font-size: 10px; font-weight: 700; padding: .25rem .6rem; border-radius: 99px; letter-spacing: .05em; text-transform: uppercase; }
-.fr.hot     .fr-badge { background: var(--orange-mid); color: var(--orange); }
+.fr.hot     .fr-badge { background: var(--orange-mid); color: var(--orange); display:flex; align-items:center; gap:5px; }
+.fr-badge-arrow { width:12px; height:8px; flex-shrink:0; }
 .fr.active  .fr-badge { background: var(--blue-mid);   color: var(--blue); }
 .fr.waiting .fr-badge { background: var(--surface2); color: var(--muted); border: 1px solid var(--border2); }
 .fr-items { font-family: var(--font2); font-size: 13px; color: var(--text2); line-height: 1.7; }
@@ -212,8 +213,19 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
 <header class="header">
   <a class="tf-logo" href="#">
-    <div class="tf-symbol"><span></span><span></span><span></span><span></span></div>
-    <div><div class="tf-wordmark">twin <em>factory</em></div></div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1774.19 143.45" style="height:28px;width:auto;display:block;">
+      <path d="M168.52,13.59l-20.54,26.67h-36.64v75.88h-31.73V40.26H31.47l20.54-26.67h116.5Z" style="fill:#fff;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M294.22,77.97c-8.89-15.79-13.03-23.45-16.56-30.81-3.22,7.36-7.36,14.87-16.25,30.66l-16.4,29.12c-3.68,6.59-9.2,10.88-17.47,10.88s-15.02-4.6-17.78-14.1l-26.06-90.13h31.73l9.66,35.72c3.22,11.5,5.37,19.93,6.9,28.21,3.37-7.2,7.36-15.02,14.41-28.36l13.8-25.75c5.37-10.12,10.58-11.5,18.09-11.5s13.03,1.38,18.4,11.5l13.64,25.91c7.66,14.1,11.19,21.31,14.41,28.21,1.69-8.12,3.99-16.86,7.05-28.21l9.66-35.72h30.96l-26.52,90.13c-2.76,9.5-9.81,14.1-17.78,14.1s-13.64-4.14-17.47-10.88l-16.4-28.97Z" style="fill:#fff;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M429.89,116.14h-31.73V13.59h31.73v102.55Z" style="fill:#fff;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M554.05,112.31l-62.85-56.41v60.24h-28.82V31.06c0-13.64,8.28-19.16,17.32-19.16,3.83,0,7.66.92,12.72,5.52l62.85,56.41V13.59h28.97v84.92c0,13.64-8.28,19.31-17.47,19.31-3.99,0-7.82-.92-12.72-5.52Z" style="fill:#fff;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M803,13.59l-20.54,26.67h-62.54v13.34h77.26l-19.31,24.99h-57.94v37.56h-31.88V13.59h114.97Z" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M844.4,116.14l19.16-26.37h25.75c6.13,0,13.34,0,18.24.31-2.76-3.68-7.05-9.96-10.42-14.87l-18.39-27.13-48.13,68.06h-37.56l65.76-92.74c4.29-5.98,10.58-11.5,20.54-11.5s15.79,5.06,20.23,11.5l64.08,92.74h-119.26Z" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M1102.85,89.77l-20.39,26.37h-51.51c-35.56,0-61.78-22.53-61.78-52.27s26.21-50.28,61.78-50.28h71.89l-20.39,26.67h-51.51c-17.17,0-30.04,10.27-30.04,24.99s12.72,24.53,30.04,24.53h71.89Z" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M1254.46,13.59l-20.54,26.67h-36.64v75.88h-31.73V40.26h-48.13l20.54-26.67h116.5Z" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M1409.44,64.79c0,36.64-25.14,53.04-74.96,53.04s-74.96-16.4-74.96-53.04,24.99-52.89,74.96-52.89,74.96,16.25,74.96,52.89ZM1377.87,64.79c0-22.07-11.5-26.21-43.38-26.21s-43.38,4.14-43.38,26.21,11.5,26.37,43.38,26.37,43.38-4.29,43.38-26.37Z" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M1584.2,116.14h-42.46l-22.84-27.13h-48.75v27.13h-31.73v-52.43h89.21c9.81,0,17.47-4.45,17.47-11.5,0-7.97-6.59-11.96-17.47-11.96h-89.21l20.69-26.67h65.91c23.3,0,52.73,7.36,52.73,36.64,0,15.94-9.96,29.12-26.83,32.5,3.53,2.61,7.36,6.28,14.41,13.49l18.85,19.93Z" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+      <path d="M1741.64,13.59l-60.86,68.67v33.88h-31.88v-34.03l-62.54-68.52h40.77l24.53,28.51c3.22,3.68,11.8,13.03,13.95,16.1,1.99-2.91,5.52-7.36,12.88-16.25l23.3-28.36h39.86Z" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2.83px;"/>
+    </svg>
     <div class="tf-tag">cockpit</div>
   </a>
   <div class="header-right">
@@ -323,8 +335,8 @@ const DEF = {
     { id:5, title:'D2W em validação clínica formal', desc:'Protocolo com FMH/parceiro científico. Dados para paper.',        status:'next',    progress:0  }
   ],
   frentes: [
-    { id:1, title:'Website',        status:'hot',     badge:'🔥 Urgente', items:['Hero','Platform','D2W subpage','mobile'] },
-    { id:2, title:'Pitch deck',     status:'hot',     badge:'🔥 Urgente', items:['Estrutura','narrativa','slides chave','one-pager'] },
+    { id:1, title:'Website',        status:'hot',     badge:'URGENTE', items:['Hero','Platform','D2W subpage','mobile'] },
+    { id:2, title:'Pitch deck',     status:'hot',     badge:'URGENTE', items:['Estrutura','narrativa','slides chave','one-pager'] },
     { id:3, title:'Parcerias',      status:'active',  badge:'Em curso',   items:['Taguspark','FMH','Oeiras Valley','Prof. Veloso'] },
     { id:4, title:'Venture clients',status:'waiting', badge:'A seguir',   items:['Ficha técnica','targets','outreach'] },
     { id:5, title:'Produto D2W',    status:'active',  badge:'Em curso',   items:['TRL 4/5','protótipo','validação'] },
@@ -455,7 +467,7 @@ function render() {
   document.getElementById('fr-count').textContent = hot + ' urgentes';
   document.getElementById('fr-list').innerHTML = D.frentes.map(f=>`
     <div class="fr ${f.status}" onclick="editFr(${f.id})">
-      <div class="fr-top"><div class="fr-title">${f.title}</div><div class="fr-badge">${f.badge}</div></div>
+      <div class="fr-top"><div class="fr-title">${f.title}</div><div class="fr-badge">${f.status==='hot'?`<svg class="fr-badge-arrow" viewBox="0 0 158.33 102.89" xmlns="http://www.w3.org/2000/svg"><path d="M151.76,55.48l-60.24,44.01c-3.3,2.41-7.94.05-7.94-4.03V7.44c0-4.09,4.64-6.44,7.94-4.03l60.24,44.01c2.73,2,2.73,6.07,0,8.07Z" fill="#FF671D"/><path d="M72.71,55.48L12.47,99.48c-3.3,2.41-7.95.05-7.95-4.04V7.44c0-4.09,4.64-6.45,7.95-4.04l60.24,44c2.73,2,2.73,6.08,0,8.07Z" fill="#FF671D"/></svg>`:''}${f.badge}</div></div>
       <div class="fr-items">${f.items.map(i=>`<span>${i}</span>`).join('')}</div>
     </div>`).join('');
 }
