@@ -80,6 +80,51 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .norte-hint { position: absolute; top: 1.25rem; right: 1.5rem; font-size: 11px; color: var(--muted); opacity: 0; transition: opacity .2s; pointer-events: none; }
 .norte:hover .norte-hint { opacity: 1; }
 
+/* ÁRVORE */
+.norte-tree-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 1rem; font-size: 12px; font-weight: 600;
+  color: var(--blue); cursor: pointer; user-select: none;
+  background: none; border: none; padding: 0;
+  transition: color .15s; position: relative; z-index: 2;
+}
+.norte-tree-toggle:hover { color: var(--orange); }
+.norte-tree-toggle .arrow { font-size: 10px; transition: transform .25s; display: inline-block; }
+.norte-tree-toggle.open .arrow { transform: rotate(90deg); }
+
+.norte-tree {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s ease, opacity .25s ease;
+  opacity: 0;
+}
+.norte-tree.open { max-height: 600px; opacity: 1; }
+
+.tree {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--font2);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.tree-root {
+  display: flex; flex-wrap: wrap; gap: 2rem;
+  justify-content: flex-start;
+}
+.tree-branch { min-width: 160px; }
+.tree-branch-title {
+  font-family: var(--font); font-size: 11px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--orange); margin-bottom: .5rem;
+}
+.tree-item {
+  display: flex; align-items: baseline; gap: .4rem;
+  color: var(--text2); font-size: 12px; line-height: 1.8;
+}
+.tree-item::before { content: '—'; color: var(--muted); font-size: 10px; flex-shrink: 0; }
+.tree-item.highlight { color: var(--blue); font-weight: 600; }
+.tree-item .trl { font-size: 10px; color: var(--muted); margin-left: 4px; }
+
 /* GRID */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
 
@@ -260,11 +305,53 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 </header>
 
 <main class="main">
-  <div class="norte" onclick="editNorte()">
-    <div class="norte-eyebrow">Norte verdadeiro</div>
-    <div class="norte-heading" id="norte-heading">—</div>
-    <div class="norte-sub" id="norte-sub">—</div>
-    <div class="norte-hint">clica para editar</div>
+  <div class="norte">
+    <div onclick="editNorte()" style="cursor:pointer">
+      <div class="norte-eyebrow">Norte verdadeiro</div>
+      <div class="norte-heading" id="norte-heading">—</div>
+      <div class="norte-sub" id="norte-sub">—</div>
+      <div class="norte-hint">clica para editar</div>
+    </div>
+    <button class="norte-tree-toggle" id="tree-toggle" onclick="toggleTree()">
+      <span class="arrow">▶</span> ver arquitectura
+    </button>
+    <div class="norte-tree" id="norte-tree">
+      <div class="tree">
+        <div class="tree-root">
+          <div class="tree-branch">
+            <div class="tree-branch-title">Plataforma</div>
+            <div class="tree-item highlight">Body Operating System</div>
+            <div class="tree-item">IoB — Internet of Bodies</div>
+            <div class="tree-item">Nanotecnologia</div>
+            <div class="tree-item">Cobot</div>
+            <div class="tree-item">Inteligência Artificial</div>
+            <div class="tree-item">Digital Twin</div>
+            <div class="tree-item">XR — Extended Reality</div>
+          </div>
+          <div class="tree-branch">
+            <div class="tree-branch-title">Produtos</div>
+            <div class="tree-item highlight">D2W — Digital2Win <span class="trl">TRL 4/5</span></div>
+            <div class="tree-item">Tissue-Tech <span class="trl">TRL 2/3</span></div>
+            <div class="tree-item">Smart Bike CVT <span class="trl">TRL 2/3</span></div>
+            <div class="tree-item">Smart Seat <span class="trl">TRL 2</span></div>
+          </div>
+          <div class="tree-branch">
+            <div class="tree-branch-title">Mercados</div>
+            <div class="tree-item">Reabilitação</div>
+            <div class="tree-item">Fitness</div>
+            <div class="tree-item">Performance</div>
+            <div class="tree-item">Defesa Militar</div>
+          </div>
+          <div class="tree-branch">
+            <div class="tree-branch-title">Empresa</div>
+            <div class="tree-item">Twin Factory Unipessoal Lda</div>
+            <div class="tree-item">Taguspark · Oeiras Valley</div>
+            <div class="tree-item">São Paulo · Brasil</div>
+            <div class="tree-item">NIPC: 514513314</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="grid-2">
@@ -526,6 +613,15 @@ function openPanel(title, html) {
   document.getElementById('panel-title').textContent = title;
   document.getElementById('panel-fields').innerHTML  = html;
   document.getElementById('overlay').classList.add('open');
+}
+
+function toggleTree() {
+  const tree = document.getElementById('norte-tree');
+  const btn  = document.getElementById('tree-toggle');
+  const open = tree.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.querySelector('.arrow').style.transform = open ? 'rotate(90deg)' : '';
+  btn.childNodes[1].textContent = open ? ' fechar' : ' ver arquitectura';
 }
 
 function addMs() {
