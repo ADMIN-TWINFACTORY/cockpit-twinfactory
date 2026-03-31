@@ -97,13 +97,13 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 }
 .ms:hover { border-color: var(--border2); background: var(--surface2); transform: translateY(-1px); }
 .ms.active  { border-color: var(--blue-mid);              background: var(--blue-dim); }
-.ms.done    { border-color: rgba(45,212,191,0.35);        background: var(--teal-dim); }
+.ms.done    { border-color: var(--border2); background: var(--surface2); opacity: .7; }
 .ms.blocked { border-color: rgba(255,90,90,0.35);         background: var(--red-dim); }
 .ms-aside { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 22px; padding-top: 3px; }
 .ms-n { font-family: var(--font2); font-size: 11px; font-weight: 700; color: var(--muted); }
 .ms-dot { width: 9px; height: 9px; border-radius: 50%; }
 .ms.active  .ms-dot { background: var(--blue); box-shadow: 0 0 6px rgba(133,198,235,0.5); }
-.ms.done    .ms-dot { background: var(--teal); }
+.ms.done    .ms-dot { background: var(--muted); }
 .ms.next    .ms-dot { background: transparent; border: 1.5px solid var(--muted); }
 .ms.blocked .ms-dot { background: var(--red); }
 .ms-body { flex: 1; min-width: 0; }
@@ -112,12 +112,29 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .ms-footer { display: flex; align-items: center; justify-content: space-between; margin-top: .6rem; }
 .ms-state { font-size: 12px; font-weight: 600; }
 .ms.active  .ms-state { color: var(--blue); }
-.ms.done    .ms-state { color: var(--teal); }
+.ms.done    .ms-state { color: var(--muted); }
+.ms.done .ms-fill { background: var(--muted); }
 .ms.next    .ms-state { color: var(--muted); }
 .ms.blocked .ms-state { color: var(--red); }
 .ms-bar { height: 4px; width: 72px; background: var(--border); border-radius: 2px; overflow: hidden; }
 .ms-fill { height: 100%; border-radius: 2px; background: var(--blue); transition: width .4s ease; }
-.ms.done .ms-fill { background: var(--teal); }
+
+/* BOTÕES ADD/REMOVE */
+.btn-add {
+  background: transparent; border: 1px dashed var(--border2);
+  border-radius: var(--r); color: var(--muted); font-family: var(--font);
+  font-size: 12px; font-weight: 600; padding: .5rem 1rem;
+  cursor: pointer; transition: all .15s; width: 100%; margin-top: .5rem;
+  letter-spacing: .04em;
+}
+.btn-add:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+.btn-remove {
+  background: transparent; border: none; color: var(--muted2);
+  font-size: 18px; line-height: 1; cursor: pointer;
+  padding: 0 0 0 .5rem; transition: color .15s; flex-shrink: 0;
+  align-self: flex-start; margin-top: 2px;
+}
+.btn-remove:hover { color: var(--red); }
 
 /* FRENTES */
 .fr-list { display: flex; flex-direction: column; gap: .6rem; }
@@ -455,9 +472,9 @@ function render() {
   const done = D.milestones.filter(m=>m.status==='done').length;
   document.getElementById('ms-count').textContent = done + ' / ' + D.milestones.length + ' concluídos';
   document.getElementById('ms-list').innerHTML = D.milestones.map(m=>`
-    <div class="ms ${m.status}" onclick="editMs(${m.id})">
+    <div class="ms ${m.status}">
       <div class="ms-aside"><div class="ms-n">0${m.id}</div><div class="ms-dot"></div></div>
-      <div class="ms-body">
+      <div class="ms-body" onclick="editMs(${m.id})" style="cursor:pointer">
         <div class="ms-title">${m.title}</div>
         <div class="ms-desc">${m.desc}</div>
         <div class="ms-footer">
@@ -465,15 +482,22 @@ function render() {
           ${m.progress>0?`<div class="ms-bar"><div class="ms-fill" style="width:${m.progress}%"></div></div>`:''}
         </div>
       </div>
-    </div>`).join('');
+      <button class="btn-remove" onclick="removeMs(${m.id})" title="Remover">×</button>
+    </div>`).join('') +
+    `<button class="btn-add" onclick="addMs()">+ novo milestone</button>`;
 
   const hot = D.frentes.filter(f=>f.status==='hot').length;
   document.getElementById('fr-count').textContent = hot + ' urgentes';
   document.getElementById('fr-list').innerHTML = D.frentes.map(f=>`
-    <div class="fr ${f.status}" onclick="editFr(${f.id})">
-      <div class="fr-top"><div class="fr-title">${f.title}</div><div class="fr-badge">${f.status==='hot'?`<svg class="fr-badge-arrow" viewBox="0 0 158.33 102.89" xmlns="http://www.w3.org/2000/svg"><path d="M151.76,55.48l-60.24,44.01c-3.3,2.41-7.94.05-7.94-4.03V7.44c0-4.09,4.64-6.44,7.94-4.03l60.24,44.01c2.73,2,2.73,6.07,0,8.07Z" fill="#FF671D"/><path d="M72.71,55.48L12.47,99.48c-3.3,2.41-7.95.05-7.95-4.04V7.44c0-4.09,4.64-6.45,7.95-4.04l60.24,44c2.73,2,2.73,6.08,0,8.07Z" fill="#FF671D"/></svg>`:''}${f.badge}</div></div>
-      <div class="fr-items">${f.items.map(i=>`<span>${i}</span>`).join('')}</div>
-    </div>`).join('');
+    <div class="fr ${f.status}">
+      <div class="fr-top">
+        <div class="fr-title" onclick="editFr(${f.id})" style="cursor:pointer;flex:1">${f.title}</div>
+        <div class="fr-badge">${f.status==='hot'?`<svg class="fr-badge-arrow" viewBox="0 0 158.33 102.89" xmlns="http://www.w3.org/2000/svg"><path d="M151.76,55.48l-60.24,44.01c-3.3,2.41-7.94.05-7.94-4.03V7.44c0-4.09,4.64-6.44,7.94-4.03l60.24,44.01c2.73,2,2.73,6.07,0,8.07Z" fill="#FF671D"/><path d="M72.71,55.48L12.47,99.48c-3.3,2.41-7.95.05-7.95-4.04V7.44c0-4.09,4.64-6.45,7.95-4.04l60.24,44c2.73,2,2.73,6.08,0,8.07Z" fill="#FF671D"/></svg>`:''}${f.badge}</div>
+        <button class="btn-remove" onclick="removeFr(${f.id})" title="Remover">×</button>
+      </div>
+      <div class="fr-items" onclick="editFr(${f.id})" style="cursor:pointer">${f.items.map(i=>`<span>${i}</span>`).join('')}</div>
+    </div>`).join('') +
+    `<button class="btn-add" onclick="addFr()">+ nova frente</button>`;
 }
 
 /* ── SETUP ── */
@@ -502,6 +526,32 @@ function openPanel(title, html) {
   document.getElementById('panel-title').textContent = title;
   document.getElementById('panel-fields').innerHTML  = html;
   document.getElementById('overlay').classList.add('open');
+}
+
+function addMs() {
+  const newId = Math.max(0, ...D.milestones.map(m=>m.id)) + 1;
+  D.milestones.push({ id:newId, title:'Novo milestone', desc:'Descrição do milestone.', status:'next', progress:0 });
+  save(); render();
+  setTimeout(()=>editMs(newId), 50);
+}
+
+function removeMs(id) {
+  if (!confirm('Remover este milestone?')) return;
+  D.milestones = D.milestones.filter(m=>m.id!==id);
+  save(); render();
+}
+
+function addFr() {
+  const newId = Math.max(0, ...D.frentes.map(f=>f.id)) + 1;
+  D.frentes.push({ id:newId, title:'Nova frente', status:'waiting', badge:'A seguir', items:['item 1'] });
+  save(); render();
+  setTimeout(()=>editFr(newId), 50);
+}
+
+function removeFr(id) {
+  if (!confirm('Remover esta frente?')) return;
+  D.frentes = D.frentes.filter(f=>f.id!==id);
+  save(); render();
 }
 
 function editNorte() {
