@@ -1,0 +1,114 @@
+{
+  "norte": {
+    "heading": "Digital Twin of Human Movement",
+    "sub": "Infraestrutura da inteligência do movimento humano — plataforma, não produto. Construindo o Body Operating System."
+  },
+  "milestones": [
+    {
+      "id": 1,
+      "title": "Website completo",
+      "desc": "Hero + Platform + Applications + D2W. Narrativa deep-tech coesa.",
+      "status": "active",
+      "progress": 60
+    },
+    {
+      "id": 2,
+      "title": "Pitch deck investor-ready",
+      "desc": "12 slides. Problema → mercado → plataforma → D2W → tração → pedido.",
+      "status": "active",
+      "progress": 30
+    },
+    {
+      "id": 3,
+      "title": "Primeiro venture client",
+      "desc": "Clínica, lab ou ginásio validando D2W em contexto real.",
+      "status": "next",
+      "progress": 0
+    },
+    {
+      "id": 4,
+      "title": "Primeiro cheque de investimento",
+      "desc": "Angel, pre-seed ou grant (FCT, Compete, EIC).",
+      "status": "next",
+      "progress": 0
+    },
+    {
+      "id": 5,
+      "title": "D2W em validação clínica formal",
+      "desc": "Protocolo com FMH/parceiro científico. Dados para paper.",
+      "status": "next",
+      "progress": 0
+    }
+  ],
+  "frentes": [
+    {
+      "id": 1,
+      "title": "Website",
+      "status": "hot",
+      "badge": "URGENTE",
+      "items": [
+        "Hero",
+        "Platform",
+        "D2W subpage",
+        "mobile"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Pitch deck",
+      "status": "hot",
+      "badge": "URGENTE",
+      "items": [
+        "Estrutura",
+        "narrativa",
+        "slides chave",
+        "one-pager"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Parcerias",
+      "status": "active",
+      "badge": "Em curso",
+      "items": [
+        "Taguspark",
+        "FMH",
+        "Oeiras Valley",
+        "Prof. Veloso"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Venture clients",
+      "status": "waiting",
+      "badge": "A seguir",
+      "items": [
+        "Ficha técnica",
+        "targets",
+        "outreach"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Produto D2W",
+      "status": "active",
+      "badge": "Em curso",
+      "items": [
+        "TRL 4/5",
+        "protótipo",
+        "validação"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Fundraising",
+      "status": "waiting",
+      "badge": "A seguir",
+      "items": [
+        "FCT",
+        "Compete 2030",
+        "angels PT/BR"
+      ]
+    }
+  ]
+}
