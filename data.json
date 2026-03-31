@@ -5,13 +5,6 @@
   },
   "milestones": [
     {
-      "id": 1,
-      "title": "Website completo",
-      "desc": "Hero + Platform + Applications + D2W. Narrativa deep-tech coesa.",
-      "status": "done",
-      "progress": 100
-    },
-    {
       "id": 2,
       "title": "Pitch deck investor-ready",
       "desc": "12 slides. Problema → mercado → plataforma → D2W → tração → pedido.",
