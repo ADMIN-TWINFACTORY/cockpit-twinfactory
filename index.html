@@ -367,7 +367,7 @@ async function loadFromGitHub() {
     } else if (res.ok) {
       const json = await res.json();
       sha = json.sha;
-      D = JSON.parse(atob(json.content.replace(/\n/g, '')));
+      D = JSON.parse(decodeURIComponent(atob(json.content.replace(/\n/g, '')).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
     } else if (res.status === 401) {
       syncStatus('error', 'token inválido');
       loadLocal(); return;
@@ -392,7 +392,7 @@ async function pushToGitHub(data, currentSha) {
   if (!token) return false;
 
   syncStatus('syncing', 'a guardar...');
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  const content = btoa(encodeURIComponent(JSON.stringify(data, null, 2)).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode('0x'+p1)));
   const body = { message: 'cockpit update', content };
   if (currentSha) body.sha = currentSha;
 
