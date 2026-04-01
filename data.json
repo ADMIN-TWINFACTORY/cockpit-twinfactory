@@ -38,6 +38,13 @@
       "desc": "Protocolo com FMH/parceiro científico. Dados para paper.",
       "status": "next",
       "progress": 0
+    },
+    {
+      "id": 6,
+      "title": "Novo milestone",
+      "desc": "Descrição do milestone.",
+      "status": "next",
+      "progress": 0
     }
   ],
   "frentes": [
